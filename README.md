@@ -36,9 +36,16 @@ big-data-retail-analytics/
 ├── docs/
 │   └── data_audit.md
 ├── notebooks/
-│   ├── 01_exploration.ipynb
-│   ├── 02_pyspark_transform.ipynb
-│   └── 03_etl_validation.ipynb
+│   ├── README.md
+│   ├── local/
+│   │   ├── 01_exploration.ipynb
+│   │   ├── 02_pyspark_transform.ipynb
+│   │   └── 03_etl_validation.ipynb
+│   └── colab/
+│       ├── README.md
+│       ├── 01_exploration.ipynb
+│       ├── 02_pyspark_transform.ipynb
+│       └── 03_etl_validation.ipynb
 ├── output/
 │   ├── charts/
 │   ├── parquet/
@@ -83,13 +90,29 @@ jupyter lab
 
 Sesuaikan `DATASET_ROOT` di `.env` jika folder dataset berada di lokasi lain.
 
+## Persiapan Google Colab
+
+1. Upload folder `Synthetic Retail Dataset - 10 Million Transactions` ke `MyDrive`.
+2. Buka notebook dari folder `notebooks/colab/` melalui GitHub.
+3. Ganti `REPOSITORY_URL` pada sel setup dengan URL repository GitHub milikmu.
+4. Jika lokasi dataset di Drive berbeda, ganti nilai `COLAB_DATASET_ROOT`.
+5. Jalankan notebook secara berurutan dari nomor 01 sampai 03.
+
+Notebook Colab memasang dependensi, melakukan mount Google Drive, dan menyimpan hasil secara permanen ke `MyDrive/big-data-retail-analytics-output`. Panduan lengkap tersedia di [`notebooks/colab/README.md`](notebooks/colab/README.md).
+
 ## Urutan pengerjaan
 
-1. Jalankan `notebooks/01_exploration.ipynb` untuk profiling dengan Pandas.
-2. Jalankan `notebooks/02_pyspark_transform.ipynb` untuk transformasi, quality checks, agregasi, dan penulisan Parquet.
+### Jupyter lokal
+
+1. Jalankan `notebooks/local/01_exploration.ipynb` untuk profiling dengan Pandas.
+2. Jalankan `notebooks/local/02_pyspark_transform.ipynb` untuk transformasi, quality checks, agregasi, dan penulisan Parquet.
 3. Siapkan PostgreSQL dengan `sql/schema.sql`.
-4. Jalankan `notebooks/03_etl_validation.ipynb` untuk validasi read-back, data mart PostgreSQL, grafik, dan benchmark.
+4. Jalankan `notebooks/local/03_etl_validation.ipynb` untuk validasi read-back, data mart PostgreSQL, grafik, dan benchmark.
 5. Lengkapi `reports/laporan_akhir.md` dengan angka hasil eksekusi.
+
+### Google Colab
+
+Urutannya sama, tetapi gunakan ketiga file dalam `notebooks/colab/`. Notebook 02 harus selesai sebelum Notebook 03 karena Notebook 03 membaca hasil ETL yang dibuat oleh Notebook 02.
 
 Panduan langkah demi langkah untuk pemula dan cara menerbitkan proyek melalui GitHub Desktop tersedia di [`docs/panduan_pemula.md`](docs/panduan_pemula.md).
 

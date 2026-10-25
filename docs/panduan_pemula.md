@@ -49,11 +49,11 @@ python scripts/create_sample.py --rows 10000
 jupyter lab
 ```
 
-Buka dan jalankan `notebooks/01_exploration.ipynb`. Tahap ini memakai Pandas pada sampel sehingga cepat dan mudah diperiksa. Pastikan semua quality check bernilai `True`.
+Buka dan jalankan `notebooks/local/01_exploration.ipynb`. Tahap ini memakai Pandas pada sampel sehingga cepat dan mudah diperiksa. Pastikan semua quality check bernilai `True`.
 
 ## Langkah 4 — Jalankan ETL penuh
 
-Buka `notebooks/02_pyspark_transform.ipynb`, lalu jalankan sel satu demi satu. Notebook tersebut melakukan:
+Buka `notebooks/local/02_pyspark_transform.ipynb`, lalu jalankan sel satu demi satu. Notebook tersebut melakukan:
 
 1. **Extract:** membaca transaksi dan tabel master dari CSV.
 2. **Validate:** memeriksa nilai kosong, nilai tidak masuk akal, rumus total, dan foreign key.
@@ -66,7 +66,7 @@ Output Parquet tidak akan masuk Git karena ukurannya besar.
 
 ## Langkah 5 — Validasi dan grafik
 
-Jalankan `notebooks/03_etl_validation.ipynb`. Grafik akan muncul di `output/charts/`. Gunakan grafik dan angka tersebut untuk melengkapi `reports/laporan_akhir.md`.
+Jalankan `notebooks/local/03_etl_validation.ipynb`. Grafik akan muncul di `output/charts/`. Gunakan grafik dan angka tersebut untuk melengkapi `reports/laporan_akhir.md`.
 
 Untuk uji performa:
 

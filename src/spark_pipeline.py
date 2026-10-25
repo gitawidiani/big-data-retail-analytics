@@ -217,6 +217,42 @@ def aggregate_outputs(enriched: DataFrame) -> dict[str, DataFrame]:
         F.round(F.sum("total_value"), 2).alias("sales_value"),
         F.round(F.sum("gross_profit"), 2).alias("gross_profit"),
     ]
+    receipt_promotion = enriched.groupBy("receipt_id").agg(
+        F.max(F.col("is_promoted").cast("int")).alias("receipt_has_promo"),
+        F.sum("quantity").alias("basket_units"),
+        F.round(F.sum("total_value"), 2).alias("basket_value"),
+        F.round(F.sum("gross_profit"), 2).alias("basket_profit"),
+    )
+    promotion_comparison = (
+        receipt_promotion.groupBy("receipt_has_promo")
+        .agg(
+            F.count("*").alias("receipts"),
+            F.round(F.avg("basket_units"), 2).alias("avg_units_per_receipt"),
+            F.round(F.avg("basket_value"), 2).alias("avg_value_per_receipt"),
+            F.round(F.avg("basket_profit"), 2).alias("avg_profit_per_receipt"),
+            F.round(
+                F.sum("basket_profit") / F.sum("basket_value") * 100,
+                2,
+            ).alias("profit_margin_pct"),
+        )
+        .withColumn(
+            "promotion_group",
+            F.when(F.col("receipt_has_promo") == 1, "Dengan Promosi").otherwise(
+                "Tanpa Promosi"
+            ),
+        )
+        .select(
+            "receipt_has_promo",
+            "promotion_group",
+            "receipts",
+            "avg_units_per_receipt",
+            "avg_value_per_receipt",
+            "avg_profit_per_receipt",
+            "profit_margin_pct",
+        )
+        .orderBy("receipt_has_promo")
+    )
+
     return {
         "monthly_sales": enriched.groupBy("month").agg(*metrics).orderBy("month"),
         "store_sales": enriched.groupBy("store_id", "store_name", "store_city", "store_type")
@@ -231,6 +267,7 @@ def aggregate_outputs(enriched: DataFrame) -> dict[str, DataFrame]:
         "promotion_sales": enriched.groupBy("is_promoted", "promo_type")
         .agg(*metrics)
         .orderBy(F.desc("sales_value")),
+        "promotion_comparison": promotion_comparison,
     }
 
 

@@ -39,7 +39,9 @@ def get_paths(variant: str | None = None) -> ProjectPaths:
     if selected_variant not in valid_variants:
         raise ValueError(f"DATASET_VARIANT harus salah satu dari {sorted(valid_variants)}")
 
-    output_dir = PROJECT_ROOT / "output"
+    output_dir = Path(os.getenv("OUTPUT_DIR", str(PROJECT_ROOT / "output"))).expanduser()
+    if not output_dir.is_absolute():
+        output_dir = (PROJECT_ROOT / output_dir).resolve()
     return ProjectPaths(
         project_root=PROJECT_ROOT,
         dataset_root=dataset_root,
